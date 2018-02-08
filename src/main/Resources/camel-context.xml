@@ -9,15 +9,12 @@
         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
+		<property name="driverClass" value="${jdbc.driverclass}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
 		<property name="password" value="${jdbc.password}" />
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="initialSize" value="5" />
-		<property name="maxOpenPreparedStatements" value="180" />
-		<property name="poolPreparedStatements" value="true" />
 	</bean>
 
 	<!-- Hibernate 4 SessionFactory Bean definition -->
@@ -31,10 +28,17 @@
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect
-				</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle12cDialect</prop>
+				<prop key="hibernate.show_sql">${jdbc.showsql}</prop>
+				<prop key="hibernate.jdbc.batch_size">0</prop>
 				<prop key="hibernate.current_session_context_class">thread</prop>
+
+				<prop key="hibernate.c3p0.min_size">5</prop>
+				<prop key="hibernate.c3p0.max_size">${jdbc.connectionpool}</prop>
+				<prop key="hibernate.c3p0.timeout">100</prop>
+				<prop key="hibernate.c3p0.max_statements">180</prop>
+				<prop key="hibernate.c3p0.idle_test_period">300</prop>
+				<prop key="hibernate.c3p0.acquire_increment">1</prop>
 			</props>
 		</property>
 	</bean>
@@ -55,13 +59,13 @@
 		</property>
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-	
+
 	<camelContext xmlns="http://camel.apache.org/schema/spring">
 		<propertyPlaceholder id="properties" location="classpath:ftp.properties" />
 	</camelContext>
-	
+
 	<bean id="log4jInitializer"
-		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" >
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetClass" value="org.springframework.util.Log4jConfigurer" />
 		<property name="targetMethod" value="initLogging" />
 		<property name="arguments">
@@ -77,7 +81,7 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</bean>
 

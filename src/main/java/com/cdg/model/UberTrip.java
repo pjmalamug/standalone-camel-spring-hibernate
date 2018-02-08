@@ -12,38 +12,38 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="UBTB_TRIP_DETAILS")
+@Table(name="table")
 public class UberTrip implements Serializable {
 
-		
+
 	@Id
-    @Column(name="trip_id")
+	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, 
-    	generator = "ubertrip_seq")
-	@SequenceGenerator(name = "ubertrip_seq", 
-		sequenceName = "UBSQ_TRIP_DETAILS__ID",allocationSize=1)
+	generator = "seq")
+	@SequenceGenerator(name = "name_seq", 
+	sequenceName = "table.seq_id",allocationSize=1)
 	private int trip_id;
-	
+
 	private String nric;
-	
+
 	private String vehicle_id;
-	
+
 	private Date start_dt;
-	
+
 	private Date end_dt;
-	
+
 	private Double toll_fee;
-	
+
 	private Double fare;
-	
+
 	private Double distance;
-	
+
 	private String payment_method;
-	
-	
+
+
 	private String trip_identification_number;
 	private static final long serialVersionUID = 1L;
-	
+
 	public int getTrip_id() {
 		return trip_id;
 	}
@@ -104,7 +104,7 @@ public class UberTrip implements Serializable {
 	public void setTrip_identification_number(String trip_identification_number) {
 		this.trip_identification_number = trip_identification_number;
 	}
-	
-	
-	
+
+
+
 }

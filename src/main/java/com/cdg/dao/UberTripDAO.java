@@ -8,4 +8,5 @@ public interface UberTripDAO {
 	public void addUberTrip(UberTrip p);
     public List<UberTrip> listUberTrip();
     public UberTrip getUberTrip(int id);
+    public void batchTrip(List<UberTrip> tripList) throws Exception;
 }

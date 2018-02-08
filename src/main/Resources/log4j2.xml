@@ -1,25 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration monitorinterval="30" status="info" strict="true">
-    <Properties>
-        <Property name="filename">log/address_update.log</Property>
-    </Properties>
-    <Appenders>
-        <Appender type="Console" name="Console">
-            <Layout type="PatternLayout" pattern="%d %p [%t] %m%n" />
-        </Appender>
-        <Appender type="Console" name="FLOW">
-            <Layout type="PatternLayout" pattern="%C{1}.%M %m %ex%n" />
-        </Appender>
-        <Appender type="File" name="File" fileName="${filename}">
-            <Layout type="PatternLayout" pattern="%d %p %C{1.} [%t] %m%n" />
-        </Appender>
-    </Appenders>
-    <Loggers>
-        <Root level="debug">
-            <AppenderRef ref="File" />
-            <AppenderRef ref="Console" />
-            <!-- Use FLOW to trace down exact method sending the msg -->
-            <!-- <AppenderRef ref="FLOW" /> -->
-        </Root>
-    </Loggers>
+	<Properties>
+		<Property name="filename">log/uber_upload.log</Property>
+	</Properties>
+	<Appenders>
+		<Appender type="Console" name="Console">
+			<Layout type="PatternLayout" pattern="%d %p [%t] %m%n" />
+		</Appender>
+		<Appender type="Console" name="FLOW">
+			<Layout type="PatternLayout" pattern="%C{1}.%M %m %ex%n" />
+		</Appender>
+
+		<!-- Rolling File Appender -->
+		<RollingFile name="RollingFile">
+			<FileName>log/uber_upload.log</FileName>
+			<FilePattern>log/%d{yyyy-MM-dd-hh-mm}.log.zip</FilePattern>
+			<PatternLayout>
+				<Pattern>%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} -
+					%msg%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="5" />
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="debug">
+			<AppenderRef ref="RollingFile" />
+			<!-- Use FLOW to trace down exact method sending the msg -->
+			<!-- <AppenderRef ref="FLOW" /> -->
+		</Root>
+	</Loggers>
 </Configuration>
